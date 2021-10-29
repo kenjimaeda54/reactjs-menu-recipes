@@ -1,17 +1,13 @@
-import React from 'react';
-// import { Home } from './pages/home';
-// import { Register } from './pages/register';
-// import { Voting } from './pages/voting';
-import { EditRecipe } from './pages/edit_recipes';
+import React, { Fragment } from 'react';
+import { Routes } from './routes';
 import GlobalStyle from './GlobalStyle';
-import { Layout } from './components/layout';
 
 function App() {
   return (
-    <Layout>
+    <Fragment>
       <GlobalStyle />
-      <EditRecipe />
-    </Layout>
+      <Routes />
+    </Fragment>
   );
 }
 

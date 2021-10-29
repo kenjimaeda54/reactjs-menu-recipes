@@ -92,6 +92,20 @@ export const Description = styled.p`
   color: ${theme.colors.gray};
 `;
 
+export const TextLetter = styled.span`
+  font-weight: ${theme.fonts.regular};
+  font-size: 13px;
+  line-height: 17px;
+  color: ${theme.colors.gray};
+`;
+
+export const WrapSelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const ContainerSelect = styled.button`
   display: flex;
   width: 40px;

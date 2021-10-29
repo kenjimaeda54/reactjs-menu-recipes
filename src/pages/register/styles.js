@@ -116,6 +116,20 @@ export const ContainerSelect = styled.button`
   }
 `;
 
+export const WrapSelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const TextLetter = styled.span`
+  font-weight: ${theme.fonts.regular};
+  font-size: 13px;
+  line-height: 17px;
+  color: ${theme.colors.gray};
+`;
+
 export const Select = styled(BsCheckLg)`
   color: ${theme.colors.green};
   width: 20px;

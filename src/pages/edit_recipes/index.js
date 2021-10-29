@@ -4,6 +4,8 @@ import {
   TitleCard,
   ContainerOption,
   ContainerSelect,
+  WrapSelect,
+  TextLetter,
   ButtonConfirmation,
   TextOption,
   Option,
@@ -21,13 +23,13 @@ import {
 export function EditRecipe() {
   const descripitonNew =
     'Em uma batedeira, bata as claras em neveJunte as gemas, uma a uma, e acrescente o açúcar.Despeje o Leite NINHO aos poucos, sem parar de bater. Incorpore delicadamente a farinha peneirada com o Chocolate em Pó DOIS FRADES e o fermento.Despeje em uma forma redonda (28 cm de diâmetro) untada com manteiga e polvilhada com farinha de trigo e leve para assar em forno médio-alto (200ºC), preaquecido, por cerca de 40 minutos.Desenforme, deixe esfriar e corte-o ao meio.stante do brigadeiro com uma espátula ou faca nas laterais e superfície do bolo. Finalize com o chocolate granulado';
-  const [havePhoto, setHavePhoto] = useState(false);
+  const [editPhoto, setEdiPhoto] = useState(false);
   const [photo, setPhoto] = useState(
     'https://img.itdg.com.br/tdg/images/recipes/000/062/547/318292/318292_original.jpg?w=1200',
   );
-  const [haveTitle, setHaveTitle] = useState(false);
+  const [editTitle, setEdiTitle] = useState(false);
   const [title, setTitle] = useState('bolo de cholate');
-  const [haveDescription, setHaveDescription] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
   const [description, setDescription] = useState(descripitonNew);
   // eslint-disable-next-line no-unused-vars
   const [confirmation, setConfirmation] = useState(false);
@@ -35,17 +37,21 @@ export function EditRecipe() {
   function handleConfirm(id) {
     switch (id) {
       case 1:
-        setHavePhoto(true);
+        setEdiPhoto(false);
         break;
       case 2:
-        setHaveTitle(true);
+        setEdiTitle(false);
         break;
       case 3:
-        setHaveDescription(true);
+        setEditDescription(false);
         break;
       default:
         return;
     }
+  }
+
+  function handleSubmit() {
+    console.log(editPhoto, editTitle, editDescription);
   }
 
   // function handleConfirmation(state) {
@@ -66,94 +72,104 @@ export function EditRecipe() {
       </SubTitle>
       <ContainerBody>
         <ContainerCard>
-          {havePhoto ? (
+          {editPhoto ? (
             <Fragment>
               <Input
                 value={photo}
                 placeholder="Coloque o link da foto"
                 onChange={(e) => setPhoto(e.target.value)}
+                maxLength={200}
               />
-              <ContainerSelect
-                disabled={photo.length > 5 ? false : true}
-                onClick={() => handleConfirm(1)}
-                disable={photo.length > 5}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={photo.length > 5 ? false : true}
+                  onClick={() => handleConfirm(1)}
+                  disable={photo.length > 5}
+                  maxLength={200}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{200 - photo.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           ) : (
             <Fragment>
               <img src={photo} width={150} height={100} />
               <ContainerOption>
                 <TextOption>Editar?</TextOption>
-                <ButtonConfirmation onClick={() => setHavePhoto(false)}>
+                <ButtonConfirmation onClick={() => setEdiPhoto(true)}>
                   <Option select={false} />
                 </ButtonConfirmation>
               </ContainerOption>
             </Fragment>
           )}
-          {haveTitle ? (
+          {editTitle ? (
             <Fragment>
               <Input
                 value={title}
                 placeholder="Coloque o título"
                 onChange={(e) => setTitle(e.target.value)}
+                maxLength={50}
               />
-              <ContainerSelect
-                disabled={title.length > 3 ? false : true}
-                disable={title.length > 3}
-                onClick={() => handleConfirm(2)}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={title.length > 3 ? false : true}
+                  disable={title.length > 3}
+                  onClick={() => handleConfirm(2)}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{50 - title.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           ) : (
             <Fragment>
               <TitleCard> {title}</TitleCard>
               <ContainerOption>
                 <TextOption>Editar?</TextOption>
-                <ButtonConfirmation onClick={() => setHaveTitle(false)}>
+                <ButtonConfirmation onClick={() => setEdiTitle(true)}>
                   <Option select={false} />
                 </ButtonConfirmation>
               </ContainerOption>
             </Fragment>
           )}
-          {haveDescription ? (
+          {editDescription ? (
             <Fragment>
               <InputDescription
                 placeholder="Coloque a descrição"
                 value={description}
                 rows={7}
                 onChange={(e) => setDescription(e.target.value)}
+                maxLength={700}
               />
-              <ContainerSelect
-                disabled={description.length > 7 ? false : true}
-                disable={description.length > 7}
-                onClick={() => handleConfirm(3)}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={description.length > 7 ? false : true}
+                  disable={description.length > 7}
+                  onClick={() => handleConfirm(3)}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{700 - description.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           ) : (
             <Fragment>
               <Description>{description}</Description>
               <ContainerOption>
                 <TextOption>Editar?</TextOption>
-                <ButtonConfirmation onClick={() => setHaveDescription(false)}>
+                <ButtonConfirmation onClick={() => setEditDescription(true)}>
                   <Option select={false} />
                 </ButtonConfirmation>
               </ContainerOption>
             </Fragment>
           )}
           <ButtonSubmit
+            onClick={handleSubmit}
             disabled={
-              havePhoto && haveTitle && haveDescription && confirmation
-                ? false
-                : true
+              !editDescription && !editTitle && !editPhoto ? false : true
             }
-            haveField={
-              havePhoto && haveTitle && haveDescription && confirmation
-            }
+            haveField={!editDescription && !editTitle && !editPhoto}
           >
             Salvar alterações
           </ButtonSubmit>

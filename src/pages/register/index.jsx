@@ -3,6 +3,8 @@ import {
   Container,
   TitleCard,
   TextConfirmation,
+  WrapSelect,
+  TextLetter,
   ContainerTextConfirmation,
   ContainerOption,
   ContainerSelect,
@@ -89,14 +91,18 @@ export function Register() {
                 value={photo}
                 placeholder="Coloque o link da foto"
                 onChange={(e) => setPhoto(e.target.value)}
+                maxLength={200}
               />
-              <ContainerSelect
-                disabled={photo.length > 5 ? false : true}
-                onClick={() => handleConfirm(1)}
-                disable={photo.length > 5}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={photo.length > 5 ? false : true}
+                  onClick={() => handleConfirm(1)}
+                  disable={photo.length > 5}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{200 - title.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           )}
           {haveTitle ? (
@@ -115,14 +121,18 @@ export function Register() {
                 value={title}
                 placeholder="Coloque o título"
                 onChange={(e) => setTitle(e.target.value)}
+                maxLength={50}
               />
-              <ContainerSelect
-                disabled={title.length > 3 ? false : true}
-                disable={title.length > 3}
-                onClick={() => handleConfirm(2)}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={title.length > 3 ? false : true}
+                  disable={title.length > 3}
+                  onClick={() => handleConfirm(2)}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{50 - title.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           )}
           {haveDescription ? (
@@ -142,14 +152,18 @@ export function Register() {
                 value={description}
                 rows={7}
                 onChange={(e) => setDescription(e.target.value)}
+                maxLength={700}
               />
-              <ContainerSelect
-                disabled={description.length > 7 ? false : true}
-                disable={description.length > 7}
-                onClick={() => handleConfirm(3)}
-              >
-                <Select />
-              </ContainerSelect>
+              <WrapSelect>
+                <ContainerSelect
+                  disabled={description.length > 7 ? false : true}
+                  disable={description.length > 7}
+                  onClick={() => handleConfirm(3)}
+                >
+                  <Select />
+                </ContainerSelect>
+                <TextLetter>Faltam:{700 - title.length}</TextLetter>
+              </WrapSelect>
             </Fragment>
           )}
           <ButtonSubmit

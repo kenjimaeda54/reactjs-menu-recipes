@@ -39,33 +39,28 @@ export const Title = styled.strong`
   color: ${theme.colors.white};
   font-size: 19px;
   line-height: 23px;
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
 `;
 
 export const Home = styled(AiOutlineHome)`
   width: 20px;
   height: 20px;
   color: ${theme.colors.white};
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
 `;
 
 export const Cadastre = styled(BiBookAdd)`
   width: 20px;
   height: 20px;
   color: ${theme.colors.white};
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
 `;
 
 export const Vote = styled(MdOutlineHowToVote)`
   width: 20px;
   height: 20px;
   color: ${theme.colors.white};
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
 `;
 
 export const Edit = styled(FaRegEdit)`
   width: 20px;
   height: 20px;
   color: ${theme.colors.white};
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
 `;

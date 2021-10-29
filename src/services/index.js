@@ -1,1 +1,1 @@
-export const baseUrl = 'localhost:8080/menu/recipes';
+export const baseUrl = 'http://localhost:8080/menu/recipes';

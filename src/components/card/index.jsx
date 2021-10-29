@@ -16,36 +16,27 @@ import {
   Button,
 } from './styles';
 
-export function CardRecipe({
-  title,
-  photo,
-  description,
-  date,
-  hours,
-  like,
-  dislike,
-  haveButton,
-}) {
+export function CardRecipe(props) {
   return (
     <Container>
-      <img src={photo} width={150} height={100} />
-      <Title> {title}</Title>
-      <Description>{description}</Description>
+      <img src={props.photo} width={150} height={100} />
+      <Title> {props.title}</Title>
+      <Description>{props.description}</Description>
       <ContainerDate>
-        <Date>{date}</Date>
-        <Hours>{hours}</Hours>
+        <Date>{props.date}</Date>
+        <Hours>{props.hours}</Hours>
       </ContainerDate>
-      {haveButton ? (
+      {props.haveButton ? (
         <ContainerVoting>
           <Button>
             <ContainerQuantityLike>
-              <Quantity>{like}</Quantity>
+              <Quantity>{props.like}</Quantity>
               <Like />
             </ContainerQuantityLike>
           </Button>
           <Button>
             <ContainerQuantityDislike>
-              <Quantity>{dislike}</Quantity>
+              <Quantity>{props.dislike}</Quantity>
               <Dislike />
             </ContainerQuantityDislike>
           </Button>
@@ -53,11 +44,11 @@ export function CardRecipe({
       ) : (
         <ContainerVoting>
           <ContainerQuantityLike>
-            <Quantity>{like}</Quantity>
+            <Quantity>{props.like}</Quantity>
             <Like />
           </ContainerQuantityLike>
           <ContainerQuantityDislike>
-            <Quantity>{dislike}</Quantity>
+            <Quantity>{props.dislike}</Quantity>
             <Dislike />
           </ContainerQuantityDislike>
         </ContainerVoting>

@@ -2,8 +2,6 @@ import React, { Fragment, useState } from 'react';
 import {
   Container,
   TitleCard,
-  TextConfirmation,
-  ContainerTextConfirmation,
   ContainerOption,
   ContainerSelect,
   ButtonConfirmation,
@@ -20,13 +18,17 @@ import {
   ButtonSubmit,
 } from './styles';
 
-export function Register() {
+export function EditRecipe() {
+  const descripitonNew =
+    'Em uma batedeira, bata as claras em neveJunte as gemas, uma a uma, e acrescente o açúcar.Despeje o Leite NINHO aos poucos, sem parar de bater. Incorpore delicadamente a farinha peneirada com o Chocolate em Pó DOIS FRADES e o fermento.Despeje em uma forma redonda (28 cm de diâmetro) untada com manteiga e polvilhada com farinha de trigo e leve para assar em forno médio-alto (200ºC), preaquecido, por cerca de 40 minutos.Desenforme, deixe esfriar e corte-o ao meio.stante do brigadeiro com uma espátula ou faca nas laterais e superfície do bolo. Finalize com o chocolate granulado';
   const [havePhoto, setHavePhoto] = useState(false);
-  const [photo, setPhoto] = useState('');
+  const [photo, setPhoto] = useState(
+    'https://img.itdg.com.br/tdg/images/recipes/000/062/547/318292/318292_original.jpg?w=1200',
+  );
   const [haveTitle, setHaveTitle] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('bolo de cholate');
   const [haveDescription, setHaveDescription] = useState(false);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(descripitonNew);
   // eslint-disable-next-line no-unused-vars
   const [confirmation, setConfirmation] = useState(false);
 
@@ -46,15 +48,15 @@ export function Register() {
     }
   }
 
-  function handleConfirmation(state) {
-    if (state) {
-      setConfirmation(true);
-      setHavePhoto(true);
-      return;
-    }
-    setConfirmation(false);
-    setHavePhoto(false);
-  }
+  // function handleConfirmation(state) {
+  //   if (state) {
+  //     setConfirmation(true);
+  //     setHavePhoto(true);
+  //     return;
+  //   }
+  //   setConfirmation(false);
+  //   setHavePhoto(false);
+  // }
 
   return (
     <Container>
@@ -65,25 +67,6 @@ export function Register() {
       <ContainerBody>
         <ContainerCard>
           {havePhoto ? (
-            <Fragment>
-              <img src={photo} width={150} height={100} />
-              <TextConfirmation>A foto apareceu?</TextConfirmation>
-              <ContainerTextConfirmation>
-                <ContainerOption>
-                  <TextOption>Nao</TextOption>
-                  <ButtonConfirmation onClick={() => handleConfirmation(false)}>
-                    <Option select={false} />
-                  </ButtonConfirmation>
-                </ContainerOption>
-                <ContainerOption>
-                  <TextOption>Sim</TextOption>
-                  <ButtonConfirmation onClick={() => handleConfirmation(true)}>
-                    <Option select={confirmation} />
-                  </ButtonConfirmation>
-                </ContainerOption>
-              </ContainerTextConfirmation>
-            </Fragment>
-          ) : (
             <Fragment>
               <Input
                 value={photo}
@@ -98,18 +81,18 @@ export function Register() {
                 <Select />
               </ContainerSelect>
             </Fragment>
-          )}
-          {haveTitle ? (
+          ) : (
             <Fragment>
-              <TitleCard> {title}</TitleCard>
+              <img src={photo} width={150} height={100} />
               <ContainerOption>
                 <TextOption>Editar?</TextOption>
-                <ButtonConfirmation onClick={() => setHaveTitle(false)}>
+                <ButtonConfirmation onClick={() => setHavePhoto(false)}>
                   <Option select={false} />
                 </ButtonConfirmation>
               </ContainerOption>
             </Fragment>
-          ) : (
+          )}
+          {haveTitle ? (
             <Fragment>
               <Input
                 value={title}
@@ -124,18 +107,18 @@ export function Register() {
                 <Select />
               </ContainerSelect>
             </Fragment>
-          )}
-          {haveDescription ? (
+          ) : (
             <Fragment>
-              <Description>{description}</Description>
+              <TitleCard> {title}</TitleCard>
               <ContainerOption>
                 <TextOption>Editar?</TextOption>
-                <ButtonConfirmation onClick={() => setHaveDescription(false)}>
+                <ButtonConfirmation onClick={() => setHaveTitle(false)}>
                   <Option select={false} />
                 </ButtonConfirmation>
               </ContainerOption>
             </Fragment>
-          ) : (
+          )}
+          {haveDescription ? (
             <Fragment>
               <InputDescription
                 placeholder="Coloque a descrição"
@@ -151,6 +134,16 @@ export function Register() {
                 <Select />
               </ContainerSelect>
             </Fragment>
+          ) : (
+            <Fragment>
+              <Description>{description}</Description>
+              <ContainerOption>
+                <TextOption>Editar?</TextOption>
+                <ButtonConfirmation onClick={() => setHaveDescription(false)}>
+                  <Option select={false} />
+                </ButtonConfirmation>
+              </ContainerOption>
+            </Fragment>
           )}
           <ButtonSubmit
             disabled={
@@ -162,7 +155,7 @@ export function Register() {
               havePhoto && haveTitle && haveDescription && confirmation
             }
           >
-            Cadastrar
+            Salvar alterações
           </ButtonSubmit>
         </ContainerCard>
       </ContainerBody>

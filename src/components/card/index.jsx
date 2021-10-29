@@ -25,6 +25,7 @@ export function CardRecipe({
   hours,
   like,
   dislike,
+  haveButton,
 }) {
   return (
     <Container>
@@ -35,20 +36,33 @@ export function CardRecipe({
         <Date>{date}</Date>
         <Hours>{hours}</Hours>
       </ContainerDate>
-      <ContainerVoting>
-        <Button>
+      {haveButton ? (
+        <ContainerVoting>
+          <Button>
+            <ContainerQuantityLike>
+              <Quantity>{like}</Quantity>
+              <Like />
+            </ContainerQuantityLike>
+          </Button>
+          <Button>
+            <ContainerQuantityDislike>
+              <Quantity>{dislike}</Quantity>
+              <Dislike />
+            </ContainerQuantityDislike>
+          </Button>
+        </ContainerVoting>
+      ) : (
+        <ContainerVoting>
           <ContainerQuantityLike>
             <Quantity>{like}</Quantity>
             <Like />
           </ContainerQuantityLike>
-        </Button>
-        <Button>
           <ContainerQuantityDislike>
             <Quantity>{dislike}</Quantity>
             <Dislike />
           </ContainerQuantityDislike>
-        </Button>
-      </ContainerVoting>
+        </ContainerVoting>
+      )}
     </Container>
   );
 }

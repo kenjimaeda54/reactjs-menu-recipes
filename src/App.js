@@ -1,5 +1,6 @@
 import React from 'react';
-import { Home } from './pages/home';
+// import { Home } from './pages/home';
+import { Register } from './pages/register';
 import GlobalStyle from './GlobalStyle';
 import { Layout } from './components/layout';
 
@@ -7,7 +8,7 @@ function App() {
   return (
     <Layout>
       <GlobalStyle />
-      <Home />
+      <Register />
     </Layout>
   );
 }

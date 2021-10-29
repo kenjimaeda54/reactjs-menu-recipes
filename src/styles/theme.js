@@ -7,6 +7,9 @@ export default {
     green: '#008000',
     gray: '#333333',
     black: '#000000',
+    lightGray: '#d3d3d3',
+    darkGray: '#a9a9a9',
+    lightGreen: 'rgba(0,128,0,0.3)',
   },
   fonts: {
     light: 300,

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../../styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -7,7 +8,11 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h2`
-  margin-bottom: 20px;
+  margin: 20px 0px;
+  font-weight: ${theme.fonts.bold};
+  font-size: 25px;
+  line-height: 20px;
+  color: ${theme.colors.white};
 `;
 
 export const ContainerCard = styled.div`

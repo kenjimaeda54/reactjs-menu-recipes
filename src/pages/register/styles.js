@@ -23,7 +23,7 @@ export const SubTitle = styled.h2`
   font-size: 13px;
   line-height: 17px;
   color: ${theme.colors.white};
-  margin-bottom: 10px;
+  margin-bottom: 100px;
 `;
 
 export const ContainerBody = styled.div`
@@ -54,7 +54,46 @@ export const TitleCard = styled.h2`
   line-height: 25px;
 `;
 
-export const Photo = styled.img``;
+export const ButtonConfirmation = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+export const ContainerTextConfirmation = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const ContainerOption = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const Option = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: ${({ select }) => (select ? 0 : 1)}px solid ${theme.colors.green};
+  background-color: ${({ select }) =>
+    select ? theme.colors.green : theme.colors.white};
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+export const TextConfirmation = styled.strong`
+  font-weight: ${theme.fonts.bold};
+  font-size: 13px;
+  line-height: 17px;
+  color: ${theme.colors.gray};
+`;
+
+export const TextOption = styled(TextConfirmation)`
+  font-weight: ${theme.fonts.regular};
+`;
 
 export const Description = styled.p`
   font-weight: ${theme.fonts.light};
@@ -71,7 +110,7 @@ export const ContainerSelect = styled.button`
   height: 40px;
   border-radius: 20px;
   background-color: ${theme.colors.lightGreen};
-  cursor: pointer;
+  cursor: ${({ disable }) => (disable ? 'pointer' : 'not-allowed')};
   &:hover {
     opacity: 0.7;
   }
@@ -96,10 +135,24 @@ export const Input = styled.input`
 
 export const InputDescription = styled.textarea`
   padding: 20px 10px;
+  resize: none;
   border-radius: 4px;
   color: ${theme.colors.white};
   background-color: ${theme.colors.darkGray};
   font-weight: ${theme.fonts.medium};
   font-size: 15px;
   line-height: 17px;
+`;
+
+export const ButtonSubmit = styled.button`
+  width: 100%;
+  opacity: ${({ haveField }) => (haveField ? '1' : '0.5')};
+  background-color: ${theme.colors.green};
+  font-weight: ${theme.fonts.medium};
+  font-size: 15px;
+  line-height: 17px;
+  color: ${theme.colors.white};
+  padding: 20px 0px;
+  border-radius: 4px;
+  cursor: ${({ haveField }) => (haveField ? 'pointer' : 'not-allowed')};
 `;

@@ -24,8 +24,6 @@ export const Title = styled.h2`
   line-height: 25px;
 `;
 
-export const Photo = styled.img``;
-
 export const Description = styled.p`
   font-weight: ${theme.fonts.light};
   font-size: 13px;

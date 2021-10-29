@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   Container,
-  Photo,
   TitleCard,
+  TextConfirmation,
+  ContainerTextConfirmation,
+  ContainerOption,
   ContainerSelect,
+  ButtonConfirmation,
+  TextOption,
+  Option,
   Select,
   Title,
   SubTitle,
@@ -12,54 +17,153 @@ import {
   InputDescription,
   ContainerBody,
   ContainerCard,
+  ButtonSubmit,
 } from './styles';
 
 export function Register() {
-  // eslint-disable-next-line no-unused-vars
-  // eslint-disable-next-line no-unused-vars
   const [havePhoto, setHavePhoto] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+  const [photo, setPhoto] = useState('');
   const [haveTitle, setHaveTitle] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+  const [title, setTitle] = useState('');
   const [haveDescription, setHaveDescription] = useState(false);
+  const [description, setDescription] = useState('');
   // eslint-disable-next-line no-unused-vars
-  const [haveDate, setHaveDate] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [haveHours, setHaveHours] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+  const [confirmation, setConfirmation] = useState(false);
+
+  function handleConfirm(id) {
+    switch (id) {
+      case 1:
+        setHavePhoto(true);
+        break;
+      case 2:
+        setHaveTitle(true);
+        break;
+      case 3:
+        setHaveDescription(true);
+        break;
+      default:
+        return;
+    }
+  }
+
+  function handleConfirmation(state) {
+    if (state) {
+      setConfirmation(true);
+      setHavePhoto(true);
+      return;
+    }
+    setConfirmation(false);
+    setHavePhoto(false);
+  }
 
   return (
     <Container>
-      <Title>Cardapios do dia</Title>
+      <Title>Cadastre a receita</Title>
       <SubTitle>
         Aqui fara o cadastro das receitas,cada campo clica em confirmar
       </SubTitle>
       <ContainerBody>
         <ContainerCard>
           {havePhoto ? (
-            <Photo src="" width={150} height={100} />
+            <Fragment>
+              <img src={photo} width={150} height={100} />
+              <TextConfirmation>A foto apareceu?</TextConfirmation>
+              <ContainerTextConfirmation>
+                <ContainerOption>
+                  <TextOption>Nao</TextOption>
+                  <ButtonConfirmation onClick={() => handleConfirmation(false)}>
+                    <Option select={false} />
+                  </ButtonConfirmation>
+                </ContainerOption>
+                <ContainerOption>
+                  <TextOption>Sim</TextOption>
+                  <ButtonConfirmation onClick={() => handleConfirmation(true)}>
+                    <Option select={confirmation} />
+                  </ButtonConfirmation>
+                </ContainerOption>
+              </ContainerTextConfirmation>
+            </Fragment>
           ) : (
-            <Input placeholder="Coloque o link da foto" />
+            <Fragment>
+              <Input
+                value={photo}
+                placeholder="Coloque o link da foto"
+                onChange={(e) => setPhoto(e.target.value)}
+              />
+              <ContainerSelect
+                disabled={photo.length > 5 ? false : true}
+                onClick={() => handleConfirm(1)}
+                disable={photo.length > 5}
+              >
+                <Select />
+              </ContainerSelect>
+            </Fragment>
           )}
-          <ContainerSelect>
-            <Select />
-          </ContainerSelect>
           {haveTitle ? (
-            <TitleCard> Pudim</TitleCard>
+            <Fragment>
+              <TitleCard> {title}</TitleCard>
+              <ContainerOption>
+                <TextOption>Editar?</TextOption>
+                <ButtonConfirmation onClick={() => setHaveTitle(false)}>
+                  <Option select={false} />
+                </ButtonConfirmation>
+              </ContainerOption>
+            </Fragment>
           ) : (
-            <Input placeholder="Coloque o título" />
+            <Fragment>
+              <Input
+                value={title}
+                placeholder="Coloque o título"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <ContainerSelect
+                disabled={title.length > 3 ? false : true}
+                disable={title.length > 3}
+                onClick={() => handleConfirm(2)}
+              >
+                <Select />
+              </ContainerSelect>
+            </Fragment>
           )}
-          <ContainerSelect>
-            <Select />
-          </ContainerSelect>
           {haveDescription ? (
-            <Description>Pudim com leite condessado</Description>
+            <Fragment>
+              <Description>{description}</Description>
+              <ContainerOption>
+                <TextOption>Editar?</TextOption>
+                <ButtonConfirmation onClick={() => setHaveDescription(false)}>
+                  <Option select={false} />
+                </ButtonConfirmation>
+              </ContainerOption>
+            </Fragment>
           ) : (
-            <InputDescription placeholder="Coloque a descrição" rows={5} />
+            <Fragment>
+              <InputDescription
+                placeholder="Coloque a descrição"
+                value={description}
+                rows={7}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <ContainerSelect
+                disabled={description.length > 7 ? false : true}
+                disable={description.length > 7}
+                onClick={() => handleConfirm(3)}
+              >
+                <Select />
+              </ContainerSelect>
+            </Fragment>
           )}
-          <ContainerSelect>
-            <Select />
-          </ContainerSelect>
+          <ButtonSubmit
+            disabled={
+              havePhoto && haveTitle && haveDescription && confirmation
+                ? false
+                : true
+            }
+            haveField={
+              havePhoto && haveTitle && haveDescription && confirmation
+            }
+          >
+            Cadastrar
+          </ButtonSubmit>
         </ContainerCard>
       </ContainerBody>
     </Container>

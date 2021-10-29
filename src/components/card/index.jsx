@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Container,
   Title,
-  Photo,
   Description,
   ContainerDate,
   Date,
@@ -29,7 +28,7 @@ export function CardRecipe({
 }) {
   return (
     <Container>
-      <Photo src={photo} width={150} height={100} />
+      <img src={photo} width={150} height={100} />
       <Title> {title}</Title>
       <Description>{description}</Description>
       <ContainerDate>

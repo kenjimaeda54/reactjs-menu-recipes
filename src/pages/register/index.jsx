@@ -1,4 +1,6 @@
 import React, { Fragment, useState } from 'react';
+import { Loading } from '../../components/load';
+import { baseUrl } from '../../services';
 import {
   Container,
   TitleCard,
@@ -20,6 +22,7 @@ import {
   ContainerBody,
   ContainerCard,
   ButtonSubmit,
+  ContainerLoading,
 } from './styles';
 
 export function Register() {
@@ -29,8 +32,8 @@ export function Register() {
   const [title, setTitle] = useState('');
   const [haveDescription, setHaveDescription] = useState(false);
   const [description, setDescription] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [confirmation, setConfirmation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleConfirm(id) {
     switch (id) {
@@ -56,6 +59,39 @@ export function Register() {
     }
     setConfirmation(false);
     setHavePhoto(false);
+  }
+
+  async function handleNavigation() {
+    try {
+      setIsLoading(true);
+      const url = baseUrl;
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          link: photo,
+          like: 0,
+          dislike: 0,
+          title: title,
+          description: description,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setHavePhoto(false);
+      setHaveTitle(false);
+      setHaveDescription(false);
+      setConfirmation(false);
+      setPhoto('');
+      setTitle('');
+      setDescription('');
+      setIsLoading(false);
+      window.location.href = '/';
+    }
   }
 
   return (
@@ -101,7 +137,7 @@ export function Register() {
                 >
                   <Select />
                 </ContainerSelect>
-                <TextLetter>Faltam:{200 - title.length}</TextLetter>
+                <TextLetter>Limite:{200 - photo.length}</TextLetter>
               </WrapSelect>
             </Fragment>
           )}
@@ -131,7 +167,7 @@ export function Register() {
                 >
                   <Select />
                 </ContainerSelect>
-                <TextLetter>Faltam:{50 - title.length}</TextLetter>
+                <TextLetter>Limite:{50 - title.length}</TextLetter>
               </WrapSelect>
             </Fragment>
           )}
@@ -162,22 +198,29 @@ export function Register() {
                 >
                   <Select />
                 </ContainerSelect>
-                <TextLetter>Faltam:{700 - title.length}</TextLetter>
+                <TextLetter>Limite:{700 - description.length}</TextLetter>
               </WrapSelect>
             </Fragment>
           )}
-          <ButtonSubmit
-            disabled={
-              havePhoto && haveTitle && haveDescription && confirmation
-                ? false
-                : true
-            }
-            haveField={
-              havePhoto && haveTitle && haveDescription && confirmation
-            }
-          >
-            Cadastrar
-          </ButtonSubmit>
+          {isLoading ? (
+            <ContainerLoading>
+              <Loading height={50} />
+            </ContainerLoading>
+          ) : (
+            <ButtonSubmit
+              onClick={handleNavigation}
+              disabled={
+                havePhoto && haveTitle && haveDescription && confirmation
+                  ? false
+                  : true
+              }
+              haveField={
+                havePhoto && haveTitle && haveDescription && confirmation
+              }
+            >
+              Cadastrar
+            </ButtonSubmit>
+          )}
         </ContainerCard>
       </ContainerBody>
     </Container>

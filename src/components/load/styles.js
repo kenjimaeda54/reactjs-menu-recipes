@@ -13,8 +13,8 @@ export const Spinner = styled.div`
   border: 5px solid ${theme.colors.green};
   border-left-color: ${theme.colors.darkGray};
   border-radius: 100%;
-  height: 100px;
-  width: 100px;
+  height: ${({ height }) => (height ? height : 100)}px;
+  width: ${({ height }) => (height ? height : 100)}px;
   animation: loading 2s linear infinite;
   @keyframes loading {
     0% {

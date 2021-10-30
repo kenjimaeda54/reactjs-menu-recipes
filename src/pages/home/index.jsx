@@ -30,7 +30,7 @@ export function Home() {
     }
     loadRecipes();
   }, []);
-  console.log(recipesSort);
+
   return (
     <Fragment>
       {isLoading ? (
@@ -53,7 +53,7 @@ export function Home() {
               />
             ))}
           </ContainerCard>
-          <Title>Cardapios ordenados por numeros de like</Title>
+          <Title>Cardápios ordenados por números de like</Title>
           <ContainerCard>
             {recipesSort.map((recipes) => (
               <CardRecipe

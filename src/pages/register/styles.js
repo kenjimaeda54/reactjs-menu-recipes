@@ -170,3 +170,10 @@ export const ButtonSubmit = styled.button`
   border-radius: 4px;
   cursor: ${({ haveField }) => (haveField ? 'pointer' : 'not-allowed')};
 `;
+
+export const ContainerLoading = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;

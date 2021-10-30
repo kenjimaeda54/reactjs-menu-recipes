@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Container, Spinner } from './styles';
 
-export function Loading() {
+export function Loading(props) {
   return (
     <Container>
-      <Spinner />
+      <Spinner height={props.height} />
     </Container>
   );
 }

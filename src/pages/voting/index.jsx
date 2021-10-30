@@ -13,74 +13,83 @@ import {
 export function Voting() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [idRecipes, setIdRecipes] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [like, setLike] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [dislike, setDislike] = useState(0);
+  const [recipesUpdate, setRecipesUpdate] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function getRecipes() {
       try {
         const url = baseUrl;
-        const response = await fetch(url);
+        const response = await fetch(url, { signal: controller.signal });
         const data = await response.json();
         setRecipes(data);
       } catch (err) {
         console.log(err);
       } finally {
         setIsLoading(false);
+        setMounted(true);
       }
     }
-    getRecipes();
+    if (!mounted) {
+      getRecipes();
+    }
+    return () => {
+      controller.abort();
+      setIsLoading(false);
+      console.log('desmontou');
+    };
   }, [recipes]);
 
-  async function handleAddLike(id) {
-    try {
-      setIsLoading(true);
-      setRecipes(
-        recipes.forEach((item) => {
-          if (item.id === id) {
-            item.like += 1;
-          }
-        }),
-      );
-      const filterRecipes = recipes.filter((item) => item.id === id);
-      console.log(filterRecipes);
-      const url = `${baseUrl}/${id}`;
-      console.log(filterRecipes);
-      await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          filterRecipes.map((item) => {
-            return {
-              dislike: item.dislike,
-              like: item.like,
-              link: item.link,
-              title: item.title,
-              description: item.description,
-            };
-          })[0],
-        ),
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
+  function handleAddLike(id, like, dislike) {
+    const recipes = {
+      id: id,
+      like: (like += 1),
+      dislike: dislike,
+    };
+    if (recipesUpdate.length !== 0) {
+      const haveId = recipesUpdate.find((item) => item.id === id);
+      if (haveId) {
+        setRecipesUpdate(
+          recipesUpdate.filter((item) => {
+            if (item.id === id) {
+              return (item.like += 1);
+            }
+            return item;
+          }),
+        );
+        return;
+      }
     }
+    setRecipesUpdate((old) => [...old, recipes]);
   }
-  function handleAddDislike(id) {
-    setRecipes(
-      recipes.forEach((item) => {
-        if (item.id === id) {
-          item.like -= 1;
-        }
-      }),
-    );
+  function handleAddDislike(id, like, dislike) {
+    const recipes = {
+      id: id,
+      like: like,
+      dislike: (dislike += 1),
+    };
+    if (recipesUpdate.length !== 0) {
+      const haveId = recipesUpdate.find((item) => item.id === id);
+      if (haveId) {
+        setRecipesUpdate(
+          recipesUpdate.filter((it) => {
+            if (it.id === id) {
+              return (it.dislike += 1);
+            }
+            return it;
+          }),
+        );
+        return;
+      }
+    }
+    setRecipesUpdate((old) => [...old, recipes]);
   }
 
   return (
@@ -102,11 +111,31 @@ export function Voting() {
                 photo={recipe.link}
                 date={recipe.date}
                 hours={recipe.hours}
-                like={recipe.like}
-                dislike={recipe.dislike}
+                like={
+                  recipesUpdate.find((it) => it.id === recipe.id)
+                    ? recipesUpdate.filter((it) => {
+                        if (it.id === recipe.id) {
+                          return it.like;
+                        }
+                      })[0].like
+                    : recipe.like
+                }
+                dislike={
+                  recipesUpdate.find((it) => it.id === recipe.id)
+                    ? recipesUpdate.filter((it) => {
+                        if (it.id === recipe.id) {
+                          return it.dislike;
+                        }
+                      })[0].dislike
+                    : recipe.dislike
+                }
                 haveButton={true}
-                addLike={() => handleAddLike(recipe.id)}
-                addDislike={() => handleAddDislike(recipe.id)}
+                addLike={() =>
+                  handleAddLike(recipe.id, recipe.like, recipe.dislike)
+                }
+                addDislike={() =>
+                  handleAddDislike(recipe.id, recipe.like, recipe.dislike)
+                }
               />
             ))}
           </ContainerCard>

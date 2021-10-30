@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Container,
   Title,
@@ -41,14 +41,18 @@ export function CardRecipe({
         <ContainerVoting>
           <Button onClick={addLike}>
             <ContainerQuantityLike>
-              <Quantity>{like}</Quantity>
-              <Like />
+              <Fragment>
+                <Quantity>{like}</Quantity>
+                <Like />
+              </Fragment>
             </ContainerQuantityLike>
           </Button>
           <Button onClick={addDislike}>
             <ContainerQuantityDislike>
-              <Quantity>{dislike}</Quantity>
-              <Dislike />
+              <Fragment>
+                <Quantity>{dislike}</Quantity>
+                <Dislike />
+              </Fragment>
             </ContainerQuantityDislike>
           </Button>
         </ContainerVoting>

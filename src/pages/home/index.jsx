@@ -1,6 +1,12 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { CardRecipe } from '../../components/card';
-import { Container, Title, ContainerCard } from './styles';
+import {
+  Container,
+  Title,
+  ContainerCard,
+  ContainerTitleHeader,
+  SubTitleHeader,
+} from './styles';
 import { baseUrl } from '../../services';
 import { Loading } from '../../components/load';
 import { getDayFormat } from '../../util';
@@ -11,10 +17,11 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function loadRecipes() {
       try {
         const url = baseUrl;
-        const response = await fetch(url);
+        const response = await fetch(url, { controller: controller.signal });
         const fetchData = await response.json();
         setRecipesDay(
           fetchData
@@ -41,6 +48,9 @@ export function Home() {
       }
     }
     loadRecipes();
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   console.log(getDayFormat());
@@ -51,7 +61,10 @@ export function Home() {
         <Loading />
       ) : (
         <Container>
-          <Title>Cardapios do dia</Title>
+          <ContainerTitleHeader>
+            <Title>Cardapios do dia</Title>
+            <SubTitleHeader> Quantidade: {recipesDay.length} </SubTitleHeader>
+          </ContainerTitleHeader>
           <ContainerCard>
             {recipesDay.map((recipes) => (
               <CardRecipe
@@ -67,7 +80,11 @@ export function Home() {
               />
             ))}
           </ContainerCard>
-          <Title>Cardápios ordenados por números de like</Title>
+          <ContainerTitleHeader>
+            <Title>Cardápios ordenados por números de like</Title>
+            <SubTitleHeader> Quantidade: {recipesSort.length} </SubTitleHeader>
+          </ContainerTitleHeader>
+
           <ContainerCard>
             {recipesSort.map((recipes) => (
               <CardRecipe

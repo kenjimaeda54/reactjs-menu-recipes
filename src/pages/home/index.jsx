@@ -3,9 +3,10 @@ import { CardRecipe } from '../../components/card';
 import { Container, Title, ContainerCard } from './styles';
 import { baseUrl } from '../../services';
 import { Loading } from '../../components/load';
+import { getDayFormat } from '../../util';
 
 export function Home() {
-  const [recipes, setRecipes] = useState([]);
+  const [recipesDay, setRecipesDay] = useState([]);
   const [recipesSort, setRecipesSort] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,7 +16,18 @@ export function Home() {
         const url = baseUrl;
         const response = await fetch(url);
         const fetchData = await response.json();
-        setRecipes(fetchData);
+        setRecipesDay(
+          fetchData
+            .filter((recipe) => recipe.date === getDayFormat())
+            .sort(function (x, y) {
+              if (x.hours > y.hours) {
+                return -1;
+              }
+              if (x.hours < y.hours) {
+                return 1;
+              }
+            }),
+        );
         const dataSort = fetchData.sort(function (x, y) {
           return y.like - x.like;
         });
@@ -31,6 +43,8 @@ export function Home() {
     loadRecipes();
   }, []);
 
+  console.log(getDayFormat());
+
   return (
     <Fragment>
       {isLoading ? (
@@ -39,7 +53,7 @@ export function Home() {
         <Container>
           <Title>Cardapios do dia</Title>
           <ContainerCard>
-            {recipes.map((recipes) => (
+            {recipesDay.map((recipes) => (
               <CardRecipe
                 key={recipes.id}
                 title={recipes.title}

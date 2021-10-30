@@ -7,6 +7,14 @@ export const Container = styled.div`
   padding: 20px 10px;
 `;
 
+export const ContainerLoading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
 export const Title = styled.h2`
   margin: 20px 0px;
   font-weight: ${theme.fonts.bold};

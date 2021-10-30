@@ -12,10 +12,6 @@ export const Container = styled.div`
   width: 70%;
   box-shadow: 0px 20px 30px -5px #7f89b927;
   filter: drop-shadow(0px 20px 30px -5px #7f89b927);
-  transition: 0.7s;
-  &:hover {
-    transform: scale(1.05);
-  }
 `;
 
 export const Title = styled.h2`

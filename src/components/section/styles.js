@@ -7,7 +7,8 @@ export const Container = styled.div`
   background-color: ${theme.colors.secondary};
   width: 100%;
   overflow-y: scroll;
-  height: calc(100vh - 100px);
+  padding: 50px 0px;
+  height: calc(100vh - 140px);
   ::-webkit-scrollbar {
     width: 10px;
   }

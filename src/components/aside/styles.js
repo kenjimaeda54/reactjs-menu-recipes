@@ -9,7 +9,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   grid-area: AS;
-  background-color: ${theme.colors.primary};
+  background-color: ${theme.colors.third};
+  border-right-width: 0.1px;
+  border-right-color: ${theme.colors.white};
+  border-right-style: solid;
   justify-content: flex-start;
   align-items: flex-start;
   padding-top: 100px;

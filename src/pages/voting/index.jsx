@@ -8,18 +8,14 @@ import {
   ContainerCard,
   SubTitle,
   ContainerLoading,
+  Button,
+  ContainerFooter,
 } from './styles';
 
 export function Voting() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [idRecipes, setIdRecipes] = useState(0);
-  // eslint-disable-next-line no-unused-vars
-  const [like, setLike] = useState(0);
-  // eslint-disable-next-line no-unused-vars
-  const [dislike, setDislike] = useState(0);
+  // const [idRecipes, setIdRecipes] = useState(0);
   const [recipesUpdate, setRecipesUpdate] = useState([]);
 
   useEffect(() => {
@@ -32,20 +28,18 @@ export function Voting() {
         setRecipes(data);
       } catch (err) {
         console.log(err);
+        alert('Erro no servidor');
       } finally {
         setIsLoading(false);
-        setMounted(true);
       }
     }
-    if (!mounted) {
-      getRecipes();
-    }
+
+    getRecipes();
+
     return () => {
       controller.abort();
-      setIsLoading(false);
-      console.log('desmontou');
     };
-  }, [recipes]);
+  }, []);
 
   function handleAddLike(id, like, dislike) {
     const recipes = {
@@ -69,6 +63,7 @@ export function Voting() {
     }
     setRecipesUpdate((old) => [...old, recipes]);
   }
+
   function handleAddDislike(id, like, dislike) {
     const recipes = {
       id: id,
@@ -112,21 +107,16 @@ export function Voting() {
                 date={recipe.date}
                 hours={recipe.hours}
                 like={
-                  recipesUpdate.find((it) => it.id === recipe.id)
-                    ? recipesUpdate.filter((it) => {
-                        if (it.id === recipe.id) {
-                          return it.like;
-                        }
-                      })[0].like
+                  recipesUpdate.length > 0 &&
+                  recipesUpdate.find((item) => item.id === recipe.id)
+                    ? recipesUpdate.find((item) => item.id === recipe.id).like
                     : recipe.like
                 }
                 dislike={
-                  recipesUpdate.find((it) => it.id === recipe.id)
-                    ? recipesUpdate.filter((it) => {
-                        if (it.id === recipe.id) {
-                          return it.dislike;
-                        }
-                      })[0].dislike
+                  recipesUpdate.length > 0 &&
+                  recipesUpdate.find((item) => item.id === recipe.id)
+                    ? recipesUpdate.find((item) => item.id === recipe.id)
+                        .dislike
                     : recipe.dislike
                 }
                 haveButton={true}
@@ -139,6 +129,15 @@ export function Voting() {
               />
             ))}
           </ContainerCard>
+          <ContainerFooter>
+            <Button
+              onClick={() => console.log('oi')}
+              disabled={recipesUpdate.length > 0 ? false : true}
+              haveField={recipesUpdate.length > 0}
+            >
+              Confirmar votação
+            </Button>
+          </ContainerFooter>
         </Container>
       )}
     </Fragment>

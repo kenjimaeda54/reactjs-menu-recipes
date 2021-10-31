@@ -10,6 +10,13 @@ export const Container = styled.div`
   overflow-x: hidden;
 `;
 
+export const ContainerLoading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
 export const Title = styled.h2`
   margin: 20px 0px;
   font-weight: ${theme.fonts.bold};
@@ -32,20 +39,26 @@ export const ContainerBody = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 100%;
 `;
 
 export const ContainerCard = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+`;
+
+export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
   background-color: ${theme.colors.white};
   padding: 20px 20px;
   border-radius: 10px;
-  gap: 20px;
   box-shadow: 0px 20px 30px -5px #7f89b927;
   filter: drop-shadow(0px 20px 30px -5px #7f89b927);
-  transition: 0.7s;
-  width: 70%;
+  gap: 20px;
 `;
 
 export const TitleCard = styled.h2`

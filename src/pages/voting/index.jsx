@@ -96,6 +96,7 @@ export function Voting() {
   function handleConfirmation() {
     setIsLoading(true);
     async function updateRecipes(recipe) {
+      repeated += 1;
       try {
         await fetch(`${baseUrl}/${recipe.id}`, {
           method: 'PUT',
@@ -109,15 +110,13 @@ export function Voting() {
       }
     }
     const timer = setInterval(() => {
-      repeated += 1;
       if (repeated === recipesUpdate.length) {
+        window.location = '/';
+        setIsLoading(false);
         setRecipesUpdate([]);
         setRecipes([]);
-        setIsLoading(false);
         clearInterval(timer);
-        window.location = '/';
         repeated = 0;
-
         return;
       }
       recipesUpdate.map((item) => {

@@ -53,8 +53,6 @@ export function Home() {
     };
   }, []);
 
-  console.log(getDayFormat());
-
   return (
     <Fragment>
       {isLoading ? (

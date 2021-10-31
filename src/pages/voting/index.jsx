@@ -15,8 +15,8 @@ import {
 export function Voting() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const [idRecipes, setIdRecipes] = useState(0);
   const [recipesUpdate, setRecipesUpdate] = useState([]);
+  let repeated = 0;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -41,11 +41,14 @@ export function Voting() {
     };
   }, []);
 
-  function handleAddLike(id, like, dislike) {
+  function handleAddLike(id, like, dislike, title, description, link) {
     const recipes = {
-      id: id,
+      id,
       like: (like += 1),
-      dislike: dislike,
+      dislike,
+      title,
+      description,
+      link,
     };
     if (recipesUpdate.length !== 0) {
       const haveId = recipesUpdate.find((item) => item.id === id);
@@ -64,11 +67,14 @@ export function Voting() {
     setRecipesUpdate((old) => [...old, recipes]);
   }
 
-  function handleAddDislike(id, like, dislike) {
+  function handleAddDislike(id, like, dislike, title, description, link) {
     const recipes = {
-      id: id,
-      like: like,
+      id,
+      like,
       dislike: (dislike += 1),
+      title,
+      description,
+      link,
     };
     if (recipesUpdate.length !== 0) {
       const haveId = recipesUpdate.find((item) => item.id === id);
@@ -85,6 +91,47 @@ export function Voting() {
       }
     }
     setRecipesUpdate((old) => [...old, recipes]);
+  }
+
+  function handleConfirmation() {
+    setIsLoading(true);
+    async function updateRecipes(recipe) {
+      try {
+        await fetch(`${baseUrl}/${recipe.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(recipe),
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    const timer = setInterval(() => {
+      repeated += 1;
+      if (repeated === recipesUpdate.length) {
+        setRecipesUpdate([]);
+        setRecipes([]);
+        setIsLoading(false);
+        clearInterval(timer);
+        window.location = '/';
+        repeated = 0;
+
+        return;
+      }
+      recipesUpdate.map((item) => {
+        const recipes = {
+          like: item.like,
+          dislike: item.dislike,
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          link: item.link,
+        };
+        updateRecipes(recipes);
+      });
+    }, 1000);
   }
 
   return (
@@ -121,17 +168,31 @@ export function Voting() {
                 }
                 haveButton={true}
                 addLike={() =>
-                  handleAddLike(recipe.id, recipe.like, recipe.dislike)
+                  handleAddLike(
+                    recipe.id,
+                    recipe.like,
+                    recipe.dislike,
+                    recipe.title,
+                    recipe.description,
+                    recipe.link,
+                  )
                 }
                 addDislike={() =>
-                  handleAddDislike(recipe.id, recipe.like, recipe.dislike)
+                  handleAddDislike(
+                    recipe.id,
+                    recipe.like,
+                    recipe.dislike,
+                    recipe.title,
+                    recipe.description,
+                    recipe.link,
+                  )
                 }
               />
             ))}
           </ContainerCard>
           <ContainerFooter>
             <Button
-              onClick={() => console.log('oi')}
+              onClick={handleConfirmation}
               disabled={recipesUpdate.length > 0 ? false : true}
               haveField={recipesUpdate.length > 0}
             >

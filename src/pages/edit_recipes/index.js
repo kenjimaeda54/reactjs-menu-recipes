@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { baseUrl } from '../../services';
 import { Loading } from '../../components/load';
 import {
@@ -7,43 +7,38 @@ import {
   TitleCard,
   Card,
   ContainerOption,
-  // ContainerSelect,
-  // WrapSelect,
-  // TextLetter,
+  ContainerSelect,
+  WrapSelect,
+  TextLetter,
   ButtonConfirmation,
   TextOption,
   Option,
-  // Select,
+  Select,
   Title,
   SubTitle,
   Description,
-  // Input,
-  // InputDescription,
+  Input,
+  InputDescription,
   ContainerBody,
   ContainerCard,
   ButtonSubmit,
 } from './styles';
 
 export function EditRecipe() {
-  const descripitonNew =
-    'Em uma batedeira, bata as claras em neveJunte as gemas, uma a uma, e acrescente o açúcar.Despeje o Leite NINHO aos poucos, sem parar de bater. Incorpore delicadamente a farinha peneirada com o Chocolate em Pó DOIS FRADES e o fermento.Despeje em uma forma redonda (28 cm de diâmetro) untada com manteiga e polvilhada com farinha de trigo e leve para assar em forno médio-alto (200ºC), preaquecido, por cerca de 40 minutos.Desenforme, deixe esfriar e corte-o ao meio.stante do brigadeiro com uma espátula ou faca nas laterais e superfície do bolo. Finalize com o chocolate granulado';
+  const refTitle = useRef(null);
+  const refDescription = useRef(null);
+  const refPhoto = useRef(null);
   const [editPhoto, setEdiPhoto] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [photo, setPhoto] = useState(
-    'https://img.itdg.com.br/tdg/images/recipes/000/062/547/318292/318292_original.jpg?w=1200',
-  );
+  const [photo, setPhoto] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [editTitle, setEdiTitle] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [title, setTitle] = useState('bolo de chocolate');
-  // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(true);
   const [editDescription, setEditDescription] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [description, setDescription] = useState(descripitonNew);
-  // eslint-disable-next-line no-unused-vars
-  const [confirmation, setConfirmation] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [recipes, setRecipes] = useState([]);
+  const [selectId, setSelectId] = useState(0);
+  const [recipesUpdate, setRecipesUpdate] = useState([]);
+  let repeated = 0;
 
   useEffect(() => {
     const controle = new AbortController();
@@ -67,35 +62,174 @@ export function EditRecipe() {
     };
   }, []);
 
-  // function handleConfirm(id) {
-  //   switch (id) {
-  //     case 1:
-  //       setEdiPhoto(false);
-  //       break;
-  //     case 2:
-  //       setEdiTitle(false);
-  //       break;
-  //     case 3:
-  //       setEditDescription(false);
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // }
-
-  function handleSubmit() {
-    console.log(editPhoto, editTitle, editDescription);
+  function handleConfirm(state) {
+    switch (state) {
+      case 1:
+        setEdiPhoto(false);
+        refPhoto.current?.focus();
+        break;
+      case 2:
+        setEdiTitle(false);
+        refTitle.current?.focus();
+        break;
+      case 3:
+        setEditDescription(false);
+        refDescription.current?.focus();
+        break;
+      default:
+        return;
+    }
   }
 
-  // function handleConfirmation(state) {
-  //   if (state) {
-  //     setConfirmation(true);
-  //     setHavePhoto(true);
-  //     return;
-  //   }
-  //   setConfirmation(false);
-  //   setHavePhoto(false);
-  // }
+  function handleStatus(state, id) {
+    setSelectId(id);
+    switch (state) {
+      case 'photo':
+        setEdiPhoto(true);
+        break;
+      case 'title':
+        setEdiTitle(true);
+        break;
+      case 'description':
+        setEditDescription(true);
+        break;
+      default:
+        return;
+    }
+  }
+
+  //field PHoto
+  function handleChangePhoto(text) {
+    setPhoto(text.target.value);
+  }
+
+  const handleFocusPhoto = (value) => {
+    const getPhoto = recipesUpdate.find((it) => it.id === selectId);
+    if (photo.length === 0) {
+      setPhoto(value);
+    } else if (getPhoto) {
+      const { link } = getPhoto;
+      setPhoto(link);
+    } else {
+      setPhoto(value);
+    }
+  };
+
+  function handleBlurPhoto() {
+    const fieldPhoto = recipes.find((item) => item.id === selectId).link;
+    if (fieldPhoto !== photo) {
+      const getRecipes = recipes.filter((item) => {
+        if (item.id === selectId) {
+          return (item.link = photo);
+        }
+      });
+      setRecipesUpdate((old) => [...old, ...getRecipes]);
+    }
+  }
+
+  //--------------
+  //filed title
+  function handleFocusTitle(text) {
+    const getTitle = recipesUpdate.find((it) => it.id === selectId);
+    if (title.length === 0) {
+      setTitle(text);
+    } else if (getTitle) {
+      const { title } = getTitle;
+      setTitle(title);
+    } else {
+      setTitle(text);
+    }
+  }
+
+  function handleBlurTitle() {
+    const fieldTitle = recipes.find((item) => item.id === selectId).title;
+    if (fieldTitle !== title) {
+      const getRecipes = recipes.filter((item) => {
+        if (item.id === selectId) {
+          return (item.title = title);
+        }
+      });
+      setRecipesUpdate((old) => [...old, ...getRecipes]);
+    }
+  }
+
+  function handleTitle(text) {
+    setTitle(text.target.value);
+  }
+
+  //-----------------
+  //field description
+
+  function handleFocusDescription(value) {
+    const getDescription = recipesUpdate.find((it) => it.id === selectId);
+    if (description.length === 0) {
+      setDescription(value);
+    } else if (getDescription) {
+      const { description } = getDescription;
+      setDescription(description);
+    } else {
+      setDescription(value);
+    }
+  }
+
+  function handleDescription(text) {
+    setDescription(text.target.value);
+  }
+
+  function handleBlurDescription() {
+    const fieldDescription = recipes.find(
+      (item) => item.id === selectId,
+    ).description;
+    if (description !== fieldDescription) {
+      const getRecipes = recipes.filter((item) => {
+        if (item.id === selectId) {
+          return (item.description = description);
+        }
+      });
+      setRecipesUpdate((old) => [...old, ...getRecipes]);
+    }
+  }
+
+  function handleSubmit() {
+    setIsLoading(true);
+    async function updateRecipes(recipe) {
+      try {
+        repeated += 1;
+        await fetch(`${baseUrl}/${recipe.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(recipe),
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const timer = setInterval(() => {
+      if (repeated === recipesUpdate.length) {
+        window.location = '/';
+        setIsLoading(false);
+        setRecipesUpdate([]);
+        setRecipes([]);
+        clearInterval(timer);
+        repeated = 0;
+        return;
+      }
+      recipesUpdate.map((item) => {
+        const recipes = {
+          like: item.like,
+          dislike: item.dislike,
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          link: item.link,
+        };
+        updateRecipes(recipes);
+      });
+    }, 1000);
+  }
 
   return (
     <Fragment>
@@ -113,29 +247,127 @@ export function EditRecipe() {
             <ContainerCard>
               {recipes.map((recipe) => (
                 <Card key={recipe.id}>
-                  <img src={recipe.link} width={150} height={100} />
-                  <ContainerOption>
-                    <TextOption>Editar?</TextOption>
-                    <ButtonConfirmation onClick={() => setEdiPhoto(true)}>
-                      <Option select={false} />
-                    </ButtonConfirmation>
-                  </ContainerOption>
-                  <TitleCard> {recipe.title}</TitleCard>
-                  <ContainerOption>
-                    <TextOption>Editar?</TextOption>
-                    <ButtonConfirmation onClick={() => setEdiTitle(true)}>
-                      <Option select={false} />
-                    </ButtonConfirmation>
-                  </ContainerOption>
-                  <Description>{recipe.description}</Description>
-                  <ContainerOption>
-                    <TextOption>Editar?</TextOption>
-                    <ButtonConfirmation
-                      onClick={() => setEditDescription(true)}
-                    >
-                      <Option select={false} />
-                    </ButtonConfirmation>
-                  </ContainerOption>
+                  {editPhoto && recipe.id === selectId ? (
+                    <Fragment>
+                      <Input
+                        ref={refPhoto}
+                        autoFocus
+                        value={selectId === recipe.id ? photo : recipe.link}
+                        placeholder="Coloque o link da foto"
+                        onChange={(e) => handleChangePhoto(e)}
+                        onFocus={() => handleFocusPhoto(recipe.link)}
+                        onBlur={() => handleBlurPhoto()}
+                        maxLength={200}
+                      />
+                      <WrapSelect>
+                        <ContainerSelect onClick={() => handleConfirm(1)}>
+                          <Select />
+                        </ContainerSelect>
+                        <TextLetter>Faltam:{200}</TextLetter>
+                      </WrapSelect>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <img
+                        src={
+                          recipe.id === selectId && photo.length > 0
+                            ? photo
+                            : recipe.link
+                        }
+                        width={150}
+                        height={100}
+                      />
+                      <ContainerOption>
+                        <TextOption>Editar?</TextOption>
+                        <ButtonConfirmation
+                          onClick={() => handleStatus('photo', recipe.id)}
+                        >
+                          <Option select={false} />
+                        </ButtonConfirmation>
+                      </ContainerOption>
+                    </Fragment>
+                  )}
+                  {editTitle && selectId === recipe.id ? (
+                    <Fragment>
+                      <Input
+                        autoFocus
+                        value={recipe.id === selectId ? title : recipe.title}
+                        placeholder={recipe.title}
+                        onChange={(e) => handleTitle(e)}
+                        onBlur={() => handleBlurTitle()}
+                        onFocus={() => handleFocusTitle(recipe.title)}
+                        ref={refTitle}
+                        maxLength={60}
+                      />
+                      <WrapSelect>
+                        <ContainerSelect onClick={() => handleConfirm(2)}>
+                          <Select />
+                        </ContainerSelect>
+                        <TextLetter>Faltam:{60 - title.length}</TextLetter>
+                      </WrapSelect>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <TitleCard>
+                        {recipe.id === selectId && title.length > 0
+                          ? title
+                          : recipe.title}
+                      </TitleCard>
+                      <ContainerOption>
+                        <TextOption>Editar?</TextOption>
+                        <ButtonConfirmation
+                          onClick={() => handleStatus('title', recipe.id)}
+                        >
+                          <Option select={false} />
+                        </ButtonConfirmation>
+                      </ContainerOption>
+                    </Fragment>
+                  )}
+                  {editDescription && selectId === recipe.id ? (
+                    <Fragment>
+                      <InputDescription
+                        ref={refDescription}
+                        autoFocus
+                        placeholder={recipes.description}
+                        value={
+                          recipe.id === selectId
+                            ? description
+                            : recipe.description
+                        }
+                        rows={7}
+                        onChange={(e) => handleDescription(e)}
+                        onBlur={() => handleBlurDescription()}
+                        onFocus={() =>
+                          handleFocusDescription(recipe.description)
+                        }
+                        maxLength={700}
+                      />
+                      <WrapSelect>
+                        <ContainerSelect onClick={() => handleConfirm(3)}>
+                          <Select />
+                        </ContainerSelect>
+                        <TextLetter>
+                          Faltam:{700 - description.length}
+                        </TextLetter>
+                      </WrapSelect>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <Description>
+                        {recipe.id === selectId && description.length > 0
+                          ? description
+                          : recipe.description}
+                      </Description>
+                      <ContainerOption>
+                        <TextOption>Editar?</TextOption>
+                        <ButtonConfirmation
+                          onClick={() => handleStatus('description', recipe.id)}
+                        >
+                          <Option select={false} />
+                        </ButtonConfirmation>
+                      </ContainerOption>
+                    </Fragment>
+                  )}
                 </Card>
               ))}
               <ButtonSubmit

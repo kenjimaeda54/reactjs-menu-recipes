@@ -52,6 +52,7 @@ export const ContainerCard = styled.div`
 
 export const Card = styled.div`
   display: flex;
+  width: 90%;
   flex-direction: column;
   background-color: ${theme.colors.white};
   padding: 20px 20px;
@@ -127,7 +128,7 @@ export const ContainerSelect = styled.button`
   height: 40px;
   border-radius: 20px;
   background-color: ${theme.colors.lightGreen};
-  cursor: ${({ disable }) => (disable ? 'pointer' : 'not-allowed')};
+  cursor: pointer;
   &:hover {
     opacity: 0.7;
   }
@@ -162,7 +163,7 @@ export const InputDescription = styled.textarea`
 `;
 
 export const ButtonSubmit = styled.button`
-  width: 100%;
+  width: 90%;
   opacity: ${({ haveField }) => (haveField ? '1' : '0.5')};
   background-color: ${theme.colors.green};
   font-weight: ${theme.fonts.medium};

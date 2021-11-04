@@ -3,13 +3,13 @@ Aplicacao para consumir api rest, feita em JDBC,Java,Web Service,Oracle SQL.
 [api](https://github.com/kenjimaeda54/api-rest-recipes)
 
 ## Motivacao
-Criou uma apicao aonde e possivel consultar as receitas registradas na api,cadastrar novas e editar as recentes
+Criou uma aplicação aonde é possível consultar as receitas registradas na API, cadastrar novas e editar as recentes
 
 
 ## Feature
-- Usamos bastante recursos do paradiga funcional como fitler,map,find
-- Para lidar com filtragem pela dio atual,editamos a data local para modelo da api.
-- Metodo sort foi interesante para organizar as datas conforme os horarios, para ordenar numeros apenas a subtracao do menor para maior resolve,para strings e necessario fazer metodo abaixo.
+- Usamos bastante recursos do paradigma funcional como filter, map, find
+- Para lidar com filtragem pelo dia atual, editamos a data local para modelo da api.
+- Método sort foi interessante para organizar as datas conforme os horários e dia, para ordenar números apenas a subtração do menor para maior resolve, para strings e necessá
 - 
 ``` javascript
 //util 
@@ -64,7 +64,7 @@ useEffect(() => {
 
 ```
 
-- Para evitar numeros excessivos de requests no banco foi usado o metodo abort da api do DOM
+- Para evitar números excessivos de requests no banco foi usado o método abort da api do DOM 
 
 ``` javascript
 
@@ -94,11 +94,13 @@ useEffect(() => {
   }, []);
   
 ```
-
-- Para lidar com meotdo put, com varias atualizacoes usamos um timer para auxiliar a percorrer toda alteracao.
-
+- Para lidar com método put, com várias atualizações usamos um timer para auxiliar a percorrer toda alteração.
 
 ``` javascript
+ 
+export function Voting() {
+  let repeated = 0;
+
  function handleConfirmation() {
     setIsLoading(true);
     async function updateRecipes(recipe) {
@@ -138,16 +140,38 @@ useEffect(() => {
       });
     }, 1000);
   }
-
+}
 ```
 
-- Para lidar com edicao das receitas foi necessario usar varios recursos do input e useRef para lidar com o focus
+
+- Para lidar com edição das receitas foi necessário usar vários recursos do input e useRef para lidar com o focus
 - Auto focus essencial para garantir que o campo pode sofrer o focus
-- Quando o campo perde o focus verificamos se o estado que armazena o texo mudou se mudou atualizamos a nossa lista
+- Quando o campo perde o focus verificamos se o estado que armazena o texto mudou,caso mudou atualizamos a nossa lista
 - Campo ao sofrer o focus atualizamos nosso estado que armazena o texto escrito no momento que esta no input
-- Segredo e usar apenas um estado para atualizar o texto escrito no campo,usando focus e onblur atalizar a lista de acordo com que recebe foucs e perde
-- Toda vez que clica no botao de editar autalizamos os estados responsavel pelo texto em cada campo e um estado com id no momento de ser cliacado esse id e importante porque sera o id que vai referenciar qual das receitas foi clicado
+- Segredo e usar apenas um estado para atualizar o texto escrito no campo, usando onfocus e onblur atualizamos a lista conforme o campo recebe e perde focus.
+- Toda vez que clica no botão de editar  abrimos o campo input e também damos focus no campo clicado
+- Por fim a cada clique confirmando a mudança do input, atualizamos o estado com o id clicado, assim saberemos qual das receitas foi clicado
+
 ``` tsx
+
+  function handleConfirm(state) {
+    switch (state) {
+      case 1:
+        setEdiPhoto(false);
+        refPhoto.current?.focus();
+        break;
+      case 2:
+        setEdiTitle(false);
+        refTitle.current?.focus();
+        break;
+      case 3:
+        setEditDescription(false);
+        refDescription.current?.focus();
+        break;
+      default:
+        return;
+    }
+  }
 
   function handleStatus(state, id) {
     setSelectId(id);
@@ -199,53 +223,48 @@ function handleBlurDescription() {
 
 
  <Fragment>
-                      <InputDescription
-                        ref={refDescription}
-                        autoFocus
-                        placeholder={recipes.description}
-                        value={
-                          recipe.id === selectId
-                            ? description
-                            : recipe.description
-                        }
-                        rows={7}
-                        onChange={(e) => handleDescription(e)}
-                        onBlur={() => handleBlurDescription()}
-                        onFocus={() =>
-                          handleFocusDescription(recipe.description)
-                        }
-                        maxLength={700}
-                      />
-                      <WrapSelect>
-                        <ContainerSelect onClick={() => handleConfirm(3)}>
-                          <Select />
-                        </ContainerSelect>
-                        <TextLetter>
+    <InputDescription
+         ref={refDescription}
+         autoFocus
+         placeholder={recipes.description}
+         value={
+         recipe.id === selectId
+         ? description
+         : recipe.description
+         }
+         rows={7}
+         onChange={(e) => handleDescription(e)}
+         onBlur={() => handleBlurDescription()}
+         onFocus={() =>
+         handleFocusDescription(recipe.description)
+          }
+         maxLength={700}
+        />
+   <WrapSelect>
+            <ContainerSelect onClick={() => handleConfirm(3)}>
+                  <Select />
+            </ContainerSelect>
+             <TextLetter>
                           Faltam:{700 - description.length}
-                        </TextLetter>
-                      </WrapSelect>
-                    </Fragment>
+             </TextLetter>
+            </WrapSelect>
+    </Fragment>
                   ) : (
-                    <Fragment>
-                      <Description>
-                        {recipe.id === selectId && description.length > 0
-                          ? description
-                          : recipe.description}
-                      </Description>
+     <Fragment>
+           <Description>
+               {recipe.id === selectId && description.length > 0
+                    ? description
+                     : recipe.description}
+            </Description>
                       <ContainerOption>
                         <TextOption>Editar?</TextOption>
                         <ButtonConfirmation
                           onClick={() => handleStatus('description', recipe.id)}
                         >
-                          <Option select={false} />
-                        </ButtonConfirmation>
-                      </ContainerOption>
-                    </Fragment>
-
-
-
-
-
+                      <Option select={false} />
+                    </ButtonConfirmation>
+                  </ContainerOption>
+            </Fragment>
 
 
 

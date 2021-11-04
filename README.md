@@ -1,3 +1,76 @@
+Menu de receitas
+Aplicacao para consumir api rest, feita em JDBC,Java,Web Service,Oracle SQL.
+[api](https://github.com/kenjimaeda54/api-rest-recipes)
+
+## Motivacao
+Criou uma apicao aonde e possivel consultar as receitas registradas na api,cadastrar novas e editar as recentes
+
+
+## Feature
+- Usamos bastante recursos do paradiga funcional como fitler,map,find
+Para lidar com filtragem e a data correta foi edidato a data de acordo conforme api fornece,assim foi possivel filtrar pelas api data recente.
+
+``` javascript
+//util 
+export function getDayFormat() {
+  const date = new Date();
+  const day = date.getDate() < 9 ? `0${date.getDate()}` : date.getDate();
+  const mouth = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${year}-${mouth}-${day}`;
+}
+
+export function Home() {
+useEffect(() => {
+    const controller = new AbortController();
+    async function loadRecipes() {
+      try {
+        const url = baseUrl;
+        const response = await fetch(url, { controller: controller.signal });
+        const fetchData = await response.json();
+        setRecipesDay(
+          fetchData
+            .filter((recipe) => recipe.date === getDayFormat())
+            .sort(function (x, y) {
+              if (x.hours > y.hours) {
+                return -1;
+              }
+              if (x.hours < y.hours) {
+                return 1;
+              }
+            }),
+        );
+        const dataSort = fetchData.sort(function (x, y) {
+          return y.like - x.like;
+        });
+        setRecipesSort(dataSort);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        alert('Erro no servidor');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadRecipes();
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+}
+
+
+```
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

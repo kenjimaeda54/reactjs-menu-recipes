@@ -1,6 +1,6 @@
 Menu de receitas
-Aplicacao para consumir api rest, feita em JDBC,Java,Web Service,Oracle SQL.
-[api](https://github.com/kenjimaeda54/api-rest-recipes)
+Aplicacao para consumir api rest, feita em JDBC,Java,Web Service,Oracle SQL.</br>
+[API](https://github.com/kenjimaeda54/api-rest-recipes)
 
 ## Motivacao
 Criou uma aplicação aonde é possível consultar as receitas registradas na API, cadastrar novas e editar as recentes

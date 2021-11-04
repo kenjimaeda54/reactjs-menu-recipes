@@ -8,8 +8,9 @@ Criou uma apicao aonde e possivel consultar as receitas registradas na api,cadas
 
 ## Feature
 - Usamos bastante recursos do paradiga funcional como fitler,map,find
-Para lidar com filtragem e a data correta foi edidato a data de acordo conforme api fornece,assim foi possivel filtrar pelas api data recente.
-
+- Para lidar com filtragem pela dio atual,editamos a data local para modelo da api.
+- Metodo sort foi interesante para organizar as datas conforme os horarios, para ordenar numeros apenas a subtracao do menor para maior resolve,para strings e necessario fazer metodo abaixo.
+- 
 ``` javascript
 //util 
 export function getDayFormat() {
@@ -63,9 +64,192 @@ useEffect(() => {
 
 ```
 
+- Para evitar numeros excessivos de requests no banco foi usado o metodo abort da api do DOM
+
+``` javascript
 
 
 
+  useEffect(() => {
+    const controller = new AbortController();
+    async function getRecipes() {
+      try {
+        const url = baseUrl;
+        const response = await fetch(url, { signal: controller.signal });
+        const data = await response.json();
+        setRecipes(data);
+      } catch (err) {
+        console.log(err);
+        alert('Erro no servidor');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    getRecipes();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+  
+```
+
+- Para lidar com meotdo put, com varias atualizacoes usamos um timer para auxiliar a percorrer toda alteracao.
+
+
+``` javascript
+ function handleConfirmation() {
+    setIsLoading(true);
+    async function updateRecipes(recipe) {
+      repeated += 1;
+      try {
+        await fetch(`${baseUrl}/${recipe.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(recipe),
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    const timer = setInterval(() => {
+      if (repeated === recipesUpdate.length) {
+        window.location = '/';
+        setIsLoading(false);
+        setRecipesUpdate([]);
+        setRecipes([]);
+        clearInterval(timer);
+        repeated = 0;
+        return;
+      }
+      recipesUpdate.map((item) => {
+        const recipes = {
+          like: item.like,
+          dislike: item.dislike,
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          link: item.link,
+        };
+        updateRecipes(recipes);
+      });
+    }, 1000);
+  }
+
+```
+
+- Para lidar com edicao das receitas foi necessario usar varios recursos do input e useRef para lidar com o focus
+- Auto focus essencial para garantir que o campo pode sofrer o focus
+- Quando o campo perde o focus verificamos se o estado que armazena o texo mudou se mudou atualizamos a nossa lista
+- Campo ao sofrer o focus atualizamos nosso estado que armazena o texto escrito no momento que esta no input
+- Segredo e usar apenas um estado para atualizar o texto escrito no campo,usando focus e onblur atalizar a lista de acordo com que recebe foucs e perde
+- Toda vez que clica no botao de editar autalizamos os estados responsavel pelo texto em cada campo e um estado com id no momento de ser cliacado esse id e importante porque sera o id que vai referenciar qual das receitas foi clicado
+``` tsx
+
+  function handleStatus(state, id) {
+    setSelectId(id);
+    switch (state) {
+      case 'photo':
+        setEdiPhoto(true);
+        break;
+      case 'title':
+        setEdiTitle(true);
+        break;
+      case 'description':
+        setEditDescription(true);
+        break;
+      default:
+        return;
+    }
+  }
+
+function handleDescription(text) {
+    setDescription(text.target.value);
+  }
+
+ function handleFocusDescription(value) {
+    const getDescription = recipesUpdate.find((it) => it.id === selectId);
+    if (description.length === 0) {
+      setDescription(value);
+    } else if (getDescription) {
+      const { description } = getDescription;
+      setDescription(description);
+    } else {
+      setDescription(value);
+    }
+  }
+
+function handleBlurDescription() {
+    const fieldDescription = recipes.find(
+      (item) => item.id === selectId,
+    ).description;
+    if (description !== fieldDescription) {
+      const getRecipes = recipes.filter((item) => {
+        if (item.id === selectId) {
+          return (item.description = description);
+        }
+      });
+      setRecipesUpdate((old) => [...old, ...getRecipes]);
+    }
+  }
+
+
+
+ <Fragment>
+                      <InputDescription
+                        ref={refDescription}
+                        autoFocus
+                        placeholder={recipes.description}
+                        value={
+                          recipe.id === selectId
+                            ? description
+                            : recipe.description
+                        }
+                        rows={7}
+                        onChange={(e) => handleDescription(e)}
+                        onBlur={() => handleBlurDescription()}
+                        onFocus={() =>
+                          handleFocusDescription(recipe.description)
+                        }
+                        maxLength={700}
+                      />
+                      <WrapSelect>
+                        <ContainerSelect onClick={() => handleConfirm(3)}>
+                          <Select />
+                        </ContainerSelect>
+                        <TextLetter>
+                          Faltam:{700 - description.length}
+                        </TextLetter>
+                      </WrapSelect>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <Description>
+                        {recipe.id === selectId && description.length > 0
+                          ? description
+                          : recipe.description}
+                      </Description>
+                      <ContainerOption>
+                        <TextOption>Editar?</TextOption>
+                        <ButtonConfirmation
+                          onClick={() => handleStatus('description', recipe.id)}
+                        >
+                          <Option select={false} />
+                        </ButtonConfirmation>
+                      </ContainerOption>
+                    </Fragment>
+
+
+
+
+
+
+
+
+```
 
 
 

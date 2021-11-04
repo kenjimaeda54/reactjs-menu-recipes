@@ -10,7 +10,7 @@ Criou uma aplicação aonde é possível consultar as receitas registradas na AP
 - Usamos bastante recursos do paradigma funcional como filter, map, find
 - Para lidar com filtragem pelo dia atual, editamos a data local para modelo da api.
 - Método sort foi interessante para organizar as datas conforme os horários e dia, para ordenar números apenas a subtração do menor para maior resolve, para strings e necessá
-- 
+
 ``` javascript
 //util 
 export function getDayFormat() {

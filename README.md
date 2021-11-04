@@ -153,6 +153,9 @@ export function Voting() {
 - Por fim a cada clique confirmando a mudança do input, atualizamos o estado com o id clicado, assim saberemos qual das receitas foi clicado
 
 ``` tsx
+  const refDescription = useRef(null);
+  const [description, setDescription] = useState('');
+
 
   function handleConfirm(state) {
     switch (state) {
